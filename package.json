@@ -1,0 +1,34 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "This is an employee tracker server app.",
+  "main": "server.js",
+  "dependencies": {
+    "-": "^0.0.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.6.1",
+    "node": "^20.6.0",
+    "sequelize": "^6.33.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nozerone/employee-tracker.git"
+  },
+  "keywords": [
+    "employee",
+    "tracker",
+    "app"
+  ],
+  "author": "nozerone",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nozerone/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/Nozerone/employee-tracker#readme"
+}
