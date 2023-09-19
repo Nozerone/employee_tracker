@@ -1,35 +1,29 @@
-const express = require('express');
-
 
 // Import and require mysql2
-const mysql = require('mysql2');
-const inquirer= require('inquirer');
+const mysql = require("mysql2");
+const inquirer = require("inquirer");
 
 // Connect to database
 const db = mysql.createConnection(
   {
-    host: '127.0.0.1',
+    host: "localhost",
     // MySQL username,
-    user: 'root',
+    user: "root",
     // MySQL password
-    password: 'password',
-    database: 'company_db'
+    password: "password",
+    database: "company_db",
   },
-  console.log(`Connected to the company_db database.`)
+  console.log(`++++++++++ Connected to the company_db database.+++++++++++`)
 );
 
-//Query database
-// db.query('SELECT * FROM employees', function (err, results) {
-//   console.log(results);
-// })
 
 const questions = [
   {
     type: "list",
     message: "what would you like to do?",
-    name: "Action",
+    name: "action",
     choices: [
-      "View All Employees", 
+      "View All Employees",
       "View All Departments",
       "View All Roles",
       "View All Employees by Department",
@@ -38,9 +32,9 @@ const questions = [
       "Add Role",
       "Add Employee",
       "Update Employee Role",
-      "Exit"
-      ]
-  }
+      "Exit",
+    ],
+  },
 
   // {
   //   type: "input",
@@ -100,48 +94,67 @@ function init() {
   inquirer.prompt(questions).then(function (data) {
     if (data.action === "View All Employees") {
       //view employees
-        viewAllEmployees();
-        
+      viewAllEmployees();
+     
     }
     if (data.action === "View All Departments") {
       //view departments
       viewAllDepartments();
-    
     }
     if (data.action === "View All Roles") {
-      //view departments
-    
-    } 
+      //view all roles
+      viewAllRoles();
+    }
     if (data.action === "Add a department") {
-      //view departments
-    
-    } 
+      //add a department
+      addDepartment();
+    }
     if (data.action === "Add Role") {
-      //view departments
-    
-    } 
-    
+      //add role
+      addRole();
+    }
+
     if (data.action === "Add Employee") {
-      //view departments
-    
-    } 
+      //Add Employee
+      addEmployee();
+    }
     if (data.action === "Update Employee Role") {
-      //view departments
-    
-    } 
-    
+      //Update Employee Role
+      updateEmployeeRole();
+    }
   });
 }
+
 function viewAllEmployees() {
-  db.query('SELECT * FROM employee', function (err, results) {
-    if (err){console.log(err);}
+  db.query("SELECT * FROM employee", function (err, results) {
+    if (err) {
+      console.log(err);
+    }
+    console.log("*** EMPLOYEE LIST ***")
     console.table(results);
-  })
+    init();
+  });
 }
+
 function viewAllDepartments() {
-  db.query('SELECT * FROM department', function (err, results) {
-    if (err){console.log(err);}
+  db.query("SELECT * FROM department", function (err, results) {
+    if (err) {
+      console.log(err);
+    }
+    console.log("*** DEPARTMENT LIST ***")
     console.table(results);
-  })
+    init();
+  });
 }
+function viewAllRoles() {
+  db.query("SELECT * FROM role", function (err, results) {
+    if (err) {
+      console.log(err);
+    }
+    console.log("*** ROLE LIST ***")
+    console.table(results);
+    init();
+  });
+}
+
 init();
