@@ -1,7 +1,7 @@
 // Import and require mysql2
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const db = require("./lib/DB.js");
+const db = require("./connectors/connection.js");
 
 let arrEmployees = [];
 let arrRoles = [];
@@ -24,72 +24,6 @@ const questions = [
       "Exit",
     ],
   },
-
-  {
-    type: "input",
-    mesage: "what is the name of the department?",
-    name: "addDpt",
-    when: (data) => data["action"] === "Add Department",
-  },
-
-  {
-    type: "input",
-    message: "What is the name of the role?",
-    name: "role",
-    when: (data) => data["action"] === "Add Role",
-  },
-
-  {
-    type: "input",
-    message: "What is the salary of the role?",
-    name: "salary",
-    when: (data) => data["action"] === "Add Role",
-  },
-
-  {
-    type: "input",
-    message: "what department does the role belong to?",
-    name: "belongto",
-    when: (data) => data["action"] === "Add Role",
-  },
-
-  {
-    type: "input",
-    message: "What is the employee's first name?",
-    name: "firstName",
-    when: (data) => data["action"] === "Add Employee",
-  },
-
-  {
-    type: "input",
-    message: "What is the employee's last name?",
-    name: "lastName",
-    when: (data) => data["action"] === "Add Employee",
-  },
-
-  {
-    type: "list",
-    mesage: "What is the employee's role?",
-    name: "currentRole",
-    choices: arrRoles,
-    when: (data) => data["action"] === "Add Employee",
-  },
-
-  {
-    type: "list",
-    message: "Who is the employee's manager?",
-    name: "currentManager",
-    choices: arrManagers,
-    when: (data) => data["action"] === "Add Employee",
-  },
-
-  {
-    type: "list",
-    message: "Which employee's role do you want to update?",
-    name: "update",
-    choices: arrEmployees,
-    when: (data) => data["action"] === "Update Employee Role",
-  },
 ];
 
 //Prompt Questions
@@ -108,13 +42,13 @@ function init() {
       //view employees
       viewAllEmployees();
     }
-    if (data.action === "Add a department") {
+    if (data.action === "Add Department") {
       //add a department
-      addDepartment();
+      createDepartment();
     }
     if (data.action === "Add Role") {
       //add role
-      addRole();
+      createRole();
     }
 
     if (data.action === "Add Employee") {
@@ -157,6 +91,100 @@ function viewAllEmployees() {
     console.table(results);
     init();
   });
+}
+function createDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "what is the name of the department you want to add?",
+        name: "department",
+      },
+    ])
+    .then((data) => {
+      db.query(
+        "INSERT INTO department (department_name) values (?)",
+        [data.department],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log("department has been added.");
+          init();
+        }
+      );
+    });
+}
+function createRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "what is the name of the role you'd like to create?",
+        name: "title",
+      },
+      {
+        type: "input",
+        message: "what is the salary for this role?",
+        name: "salary",
+      },
+      {
+        type: "input",
+        message: " what is the department id?",
+        name: "departmentID",
+      },
+    ])
+    .then((data) => {
+      db.query(
+        "INSERT INTO role (title, salary, departmentID) values (?,?,?)",
+        [data.title, data.salary, data.departmentID],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log("role has been added.");
+          init();
+        }
+      );
+    });
+}
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "what is the employee's name?",
+        name: "firstName",
+      },
+      {
+        type: "input",
+        message: "last name?",
+        name: "lastName",
+      },
+      {
+        type: "input",
+        message: " what is the role?",
+        name: "roleID",
+      },
+      {
+        type: "input",
+        message: " what is the manager id?",
+        name: "managerID",
+      },
+    ])
+    .then((data) => {
+      db.query(
+        "INSERT INTO employee (first_name, last_name, role_id, manager_id) values (?,?,?,?)",
+        [data.firstName, data.lastName, data.roleID, data.managerID],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log("employee has been added.");
+          init();
+        }
+      );
+    });
 }
 
 init();
