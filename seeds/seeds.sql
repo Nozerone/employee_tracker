@@ -1,7 +1,7 @@
 -- DEPARTMENT --
 
 INSERT INTO department (department_name) 
-VALUES   ("Engineering"),
+VALUES  ("Engineering"),
         ("Sales"),
         ("Finance"),
         ("Legal"),

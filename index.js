@@ -3,10 +3,10 @@ const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const db = require("./connectors/connection.js");
 
-let arrEmployees = [];
-let arrRoles = [];
-let arrManagers = [];
-let deptBelong = [];
+// let arrEmployees = [];
+// let arrRoles = [];
+// let arrManagers = [];
+// let deptBelong = [];
 
 const questions = [
   {
@@ -186,5 +186,79 @@ function addEmployee() {
       );
     });
 }
+// function updateEmployeeRole() {
+//   inquirer
+//     .prompt([
+//       {
+//         type: "list",
+//         message: "which employee's role do you want to update?",
+//         name: "employeeID",
+//         choices: (arrEmployees = []),
+//       },
+//       {
+//         type: "input",
+//         message: "what is this employees new role?",
+//         name: "newRole",
+//       },
+
+//     ])
+//     .then((data) => {
+//       db.query(
+//         "UPDATE employee (role_id, employeeID) values (?,?)",
+//         [data.roleID, data.employeeID],
+//         (err, results) => {
+//           if (err) {
+//             console.log(err);
+//           }
+//           console.log("employee's role has been updated.");
+//           init();
+//         }
+//       );
+//     });
+// }
+
+function updateEmployeeRole() {
+  // Query the database to retrieve the current employee list
+  db.query("SELECT id, first_name, last_name FROM employee", (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    const arrEmployees = results.map((employee) => ({
+      name: employee.first_name,
+      value: employee.employee_id,
+    }));
+
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Which employee's role do you want to update?",
+          name: "employee_list",
+          choices: arrEmployees,
+        },
+        {
+          type: "input",
+          message: "What is the employee's new role?",
+          name: "newRole",
+        },
+      ])
+      .then((data) => {
+        db.query(
+          "UPDATE employee SET role_id = ? WHERE id = employee",
+          [data.newRole],
+          (err, results) => {
+            if (err) {
+              console.log(err);
+            }
+            console.log("Employee's role has been updated.");
+            init();
+          }
+        );
+      });
+  });
+}
+
 
 init();
