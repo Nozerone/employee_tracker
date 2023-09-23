@@ -227,7 +227,7 @@ function updateEmployeeRole() {
 
     const arrEmployees = results.map((employee) => ({
       name: employee.first_name,
-      value: employee.employee_id,
+      value: employee.id,
     }));
 
     inquirer
@@ -235,7 +235,7 @@ function updateEmployeeRole() {
         {
           type: "list",
           message: "Which employee's role do you want to update?",
-          name: "employee_list",
+          name: "employeeID",
           choices: arrEmployees,
         },
         {
@@ -246,8 +246,8 @@ function updateEmployeeRole() {
       ])
       .then((data) => {
         db.query(
-          "UPDATE employee SET role_id = ? WHERE id = employee",
-          [data.newRole],
+          "UPDATE employee SET role_id = ? WHERE id = ?",
+          [data.newRole, data.employeeID],
           (err, results) => {
             if (err) {
               console.log(err);
