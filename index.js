@@ -260,5 +260,4 @@ function updateEmployeeRole() {
   });
 }
 
-
 init();
